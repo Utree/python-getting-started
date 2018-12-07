@@ -1,10 +1,14 @@
-#!/usr/bin/env python
-import os
+from sshtunnel import SSHTunnelForwarder
 import sys
 
-if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gettingstarted.settings")
+args = sys.argv
 
-    from django.core.management import execute_from_command_line
+server = SSHTunnelForwarder(
+    ('example.com', 22),
+    ssh_username="name",
+    ssh_password="pass",
+    remote_bind_address=('0.0.0.0', 8080),
+    local_bind_address=('0.0.0.0', int(args[1]))
+)
 
-    execute_from_command_line(sys.argv)
+server.start()
